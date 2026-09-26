@@ -3,29 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Denzii 工具箱</title>
-  <meta name="description" content="Denzii 在 X 上分享过的开源工具、学习资源和书单。" />
+  <title>ToolBox</title>
+  <meta name="description" content="不翻时间线，来查好物件" />
   <link rel="stylesheet" href="./assets/style.css" />
 </head>
 <body>
+  <div class="topbar">
+    <div class="theme-switch" role="group" aria-label="外观">
+      <button type="button" data-theme-set="light" title="白天">日</button>
+      <button type="button" data-theme-set="dark" title="黑夜">夜</button>
+      <button type="button" data-theme-set="auto" title="跟随系统">自动</button>
+    </div>
+    <a class="x-link" href="https://x.com/denziideng" target="_blank" rel="noopener" title="@denziideng">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.726-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+    </a>
+  </div>
+
   <div class="wrap">
     <header>
-      <h1>Denzii 工具箱</h1>
-      <p>我在 X 上分享过的开源工具、学习资源和书单。按场景查找，不必翻时间线。</p>
+      <h1>ToolBox</h1>
+      <p class="tagline">不翻时间线，来查好物件</p>
     </header>
 
     <input id="q" class="search" type="search" placeholder="搜名称、痛点或标签，例如：双机、字幕、书单、Agent" />
 
     <div id="filters" class="filters"></div>
-    <div class="quick">
-      <button id="featuredBtn" type="button">精选</button>
-      <button id="weekBtn" type="button">本周新收录</button>
+    <div class="toolbar">
+      <div class="quick">
+        <button id="featuredBtn" type="button">精选</button>
+        <button id="weekBtn" type="button">本周新收录</button>
+        <button id="heatBtn" type="button">热度榜</button>
+      </div>
+      <div class="layout-switch" role="group" aria-label="展示方式">
+        <button id="cardBtn" type="button">卡片</button>
+        <button id="listBtn" type="button">列表</button>
+      </div>
     </div>
     <div id="count" class="meta">加载中…</div>
     <section id="grid" class="grid"></section>
 
     <footer>
-      GitHub 星数打开页面时会尝试刷新；原推浏览量来自收录时的快照，第三方工具也可能改名、失效或收费。
+      GitHub 星数打开页面时会尝试刷新；原推浏览量来自收录时的快照。
     </footer>
   </div>
   <script src="./assets/app.js"></script>
