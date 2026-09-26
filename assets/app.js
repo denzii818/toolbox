@@ -132,7 +132,6 @@ function render() {
       <div class="lead">
         <div>${rank}${featuredBadge}${newBadge}<span class="badge">${catName[item.category] || item.category}</span></div>
         <h3>${item.name}</h3>
-        ${statsHtml(item)}
       </div>
       <div class="body">
         <p class="summary">${item.summary}</p>
@@ -140,6 +139,7 @@ function render() {
         <p class="usage">我的用法：${item.usage || "—"}</p>
         <div class="tags">${(item.tags || []).map((t) => `<span class="tag">${t}</span>`).join("")}</div>
       </div>
+      ${statsHtml(item)}
       <div class="actions">
         <a class="primary" href="${item.url}" target="_blank" rel="noopener">打开</a>
         ${item.tweet ? `<a href="${item.tweet}" target="_blank" rel="noopener">原推</a>` : ""}
