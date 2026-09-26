@@ -3,6 +3,7 @@ const state = {
   items: [],
   category: "all",
   view: "all",
+  layout: localStorage.getItem("toolbox-layout") || "card",
   query: ""
 };
 
@@ -33,6 +34,20 @@ function parseRepo(githubUrl) {
   return `${match[1]}/${match[2].replace(/\.git$/, "")}`;
 }
 
+function viewCount(item) {
+  const n = Number(item.tweetViews);
+  return Number.isFinite(n) ? n : -1;
+}
+
+function applyTheme(theme) {
+  const next = theme || localStorage.getItem("toolbox-theme") || "auto";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem("toolbox-theme", next);
+  document.querySelectorAll("[data-theme-set]").forEach((btn) => {
+    btn.classList.toggle("active", btn.getAttribute("data-theme-set") === next);
+  });
+}
+
 function matches(item) {
   if (state.view === "featured" && !item.featured) return false;
   if (state.view === "week" && !withinDays(item.added, 7)) return false;
@@ -50,6 +65,14 @@ function matches(item) {
   return blob.includes(q);
 }
 
+function visibleItems() {
+  const list = state.items.filter(matches);
+  if (state.view === "heat") {
+    return list.slice().sort((a, b) => viewCount(b) - viewCount(a));
+  }
+  return list;
+}
+
 function renderFilters() {
   const box = $("filters");
   box.innerHTML = "";
@@ -65,6 +88,9 @@ function renderFilters() {
   });
   $("featuredBtn").className = state.view === "featured" ? "active" : "";
   $("weekBtn").className = state.view === "week" ? "active" : "";
+  $("heatBtn").className = state.view === "heat" ? "active" : "";
+  $("cardBtn").className = state.layout === "card" ? "active" : "";
+  $("listBtn").className = state.layout === "list" ? "active" : "";
 }
 
 function statsHtml(item) {
@@ -80,9 +106,11 @@ function statsHtml(item) {
 
 function render() {
   renderFilters();
-  const list = state.items.filter(matches);
-  $("count").textContent = `共 ${list.length} 条`;
+  const list = visibleItems();
+  const label = state.view === "heat" ? "按原推浏览量排序" : "共";
+  $("count").textContent = `${label} ${list.length} 条`;
   const grid = $("grid");
+  grid.className = state.layout === "list" ? "grid list" : "grid";
   grid.innerHTML = "";
 
   if (!list.length) {
@@ -91,19 +119,24 @@ function render() {
   }
 
   const catName = Object.fromEntries(state.categories.map((c) => [c.id, c.name]));
-  list.forEach((item) => {
+  list.forEach((item, index) => {
     const card = document.createElement("article");
     card.className = "card";
     const newBadge = withinDays(item.added, 7) ? `<span class="badge">本周新</span>` : "";
     const featuredBadge = item.featured ? `<span class="badge">精选</span>` : "";
+    const rank = state.view === "heat" ? `<span class="rank">#${index + 1}</span>` : "";
     card.innerHTML = `
-      <div>${featuredBadge}${newBadge}<span class="badge">${catName[item.category] || item.category}</span></div>
-      <h3>${item.name}</h3>
-      ${statsHtml(item)}
-      <p class="summary">${item.summary}</p>
-      <p class="fit">适合：${item.suitable || "—"}</p>
-      <p class="usage">我的用法：${item.usage || "—"}</p>
-      <div class="tags">${(item.tags || []).map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+      <div class="lead">
+        <div>${rank}${featuredBadge}${newBadge}<span class="badge">${catName[item.category] || item.category}</span></div>
+        <h3>${item.name}</h3>
+        ${statsHtml(item)}
+      </div>
+      <div class="body">
+        <p class="summary">${item.summary}</p>
+        <p class="fit">适合：${item.suitable || "—"}</p>
+        <p class="usage">我的用法：${item.usage || "—"}</p>
+        <div class="tags">${(item.tags || []).map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+      </div>
       <div class="actions">
         <a class="primary" href="${item.url}" target="_blank" rel="noopener">打开</a>
         ${item.tweet ? `<a href="${item.tweet}" target="_blank" rel="noopener">原推</a>` : ""}
@@ -125,13 +158,12 @@ async function refreshStars() {
         if (parseRepo(item.github) === repo) item.stars = data.stargazers_count;
       });
       render();
-    } catch (err) {
-      // 没有 GitHub 或接口限流时，继续用 JSON 里的快照
-    }
+    } catch (err) {}
   }
 }
 
 async function boot() {
+  applyTheme();
   try {
     const [catsRes, itemsRes] = await Promise.all([
       fetch("./data/categories.json"),
@@ -147,6 +179,10 @@ async function boot() {
   }
 }
 
+document.querySelectorAll("[data-theme-set]").forEach((btn) => {
+  btn.addEventListener("click", () => applyTheme(btn.getAttribute("data-theme-set")));
+});
+
 $("q").addEventListener("input", (e) => {
   state.query = e.target.value;
   render();
@@ -159,6 +195,23 @@ $("featuredBtn").addEventListener("click", () => {
 
 $("weekBtn").addEventListener("click", () => {
   state.view = state.view === "week" ? "all" : "week";
+  render();
+});
+
+$("heatBtn").addEventListener("click", () => {
+  state.view = state.view === "heat" ? "all" : "heat";
+  render();
+});
+
+$("cardBtn").addEventListener("click", () => {
+  state.layout = "card";
+  localStorage.setItem("toolbox-layout", "card");
+  render();
+});
+
+$("listBtn").addEventListener("click", () => {
+  state.layout = "list";
+  localStorage.setItem("toolbox-layout", "list");
   render();
 });
 
