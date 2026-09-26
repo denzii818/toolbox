@@ -1,5 +1,24 @@
 [
   {
+    "id": "cosyvoice",
+    "name": "CosyVoice",
+    "summary": "开源本地 AI 声音克隆工具，只需 3 秒语音样本即可生成高拟真度的语气与音色，支持多语言与方言，离线隐私安全。",
+    "suitable": "有声音克隆/配音需求、关注数据隐私、喜欢本地部署工具的用户",
+    "notSuitable": "没有独立显卡/本地算力较弱、追求实时极速生成的人",
+    "usage": "在本地安装部署（如 VoiceStudio 等客户端），导入一段 3 秒以上的音频样本，输入所需文本即可合成说话语音。",
+    "url": "https://github.com/FunAudioLLM/CosyVoice",
+    "github": "https://github.com/FunAudioLLM/CosyVoice",
+    "stars": 10000,
+    "tweet": "https://x.com/denziideng/status/2057738932423709124",
+    "tweetViews": 203900,
+    "category": "audio",
+    "tags": ["开源免费", "AI语音", "声音克隆", "本地运行"],
+    "platforms": ["windows", "mac", "linux"],
+    "difficulty": "install",
+    "featured": true,
+    "added": "2026-05-22"
+  },
+  {
     "id": "deskflow",
     "name": "Deskflow",
     "summary": "一套键鼠同时控制 Mac 和 Windows，鼠标滑到屏幕边缘就切过去，剪贴板打通。",
