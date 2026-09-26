@@ -1,10 +1,10 @@
 [
   { "id": "desktop", "name": "办公与效率" },
-  { "id": "ai-dev", "name": "AI $ Agent" },
+  { "id": "ai-dev", "name": "AI & Agent" },
   { "id": "ai-create", "name": "AI 创作" },
   { "id": "learn", "name": "学习与教育" },
   { "id": "books", "name": "读书与书单" },
-  { "id": "content", "name": "内容运营" },
-  { "id": "people", "name": "人物与信息源" },
+  { "id": "content", "name": "内容与运营" },
+  { "id": "people", "name": "人物与信源" },
   { "id": "life", "name": "生活与健康" }
 ]
