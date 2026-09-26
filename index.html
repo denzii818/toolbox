@@ -9,16 +9,22 @@
 </head>
 <body>
   <div class="topbar">
-    <div class="theme-switch" role="group" aria-label="外观">
-      <button type="button" data-theme-set="light" title="白天">日</button>
-      <button type="button" data-theme-set="dark" title="黑夜">夜</button>
-      <button type="button" data-theme-set="auto" title="跟随系统">自动</button>
-    </div>
-    <a class="x-link" href="https://x.com/denziideng" target="_blank" rel="noopener" title="@denziideng">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.726-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-      </svg>
+    <a class="home-link" href="./" title="首页">
+      <span class="home-icon" aria-hidden="true">🌍</span>
+      <span>Home</span>
     </a>
+    <div class="top-right">
+      <div class="theme-switch" role="group" aria-label="外观">
+        <button type="button" data-theme-set="light" title="白天">日</button>
+        <button type="button" data-theme-set="dark" title="黑夜">夜</button>
+        <button type="button" data-theme-set="auto" title="跟随系统">自动</button>
+      </div>
+      <a class="x-link" href="https://x.com/denziideng" target="_blank" rel="noopener" title="@denziideng">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.726-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+    </div>
   </div>
 
   <div class="wrap">
@@ -45,9 +51,19 @@
     <section id="grid" class="grid"></section>
 
     <footer>
-      GitHub 星数打开页面时会尝试刷新；原推浏览量来自收录时的快照。
+      <p class="about">
+        Denzii 是加密副业者、DAO Builder、定投策略实践者，在 X 上专注分享开源工具、AI技能、个人成长记录和长期主义实践。
+        觉得这些物件有帮助，欢迎关注 @deziideng 🙏
+        <a href="https://x.com/denziideng" target="_blank" rel="noopener">@denziideng</a>。
+      </p>
+      <p class="traffic">
+        本站访问 <span id="busuanzi_value_site_pv">—</span> 次
+        · 访客 <span id="busuanzi_value_site_uv">—</span>
+      </p>
+      <p class="note">GitHub 星数打开页面时会尝试刷新，原推浏览量来自收录时的快照。</p>
     </footer>
   </div>
   <script src="./assets/app.js"></script>
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </body>
 </html>
