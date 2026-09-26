@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Denzii 工具箱</title>
+  <meta name="description" content="Denzii 在 X 上分享过的开源工具、学习资源和书单。" />
+  <link rel="stylesheet" href="./assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Denzii 工具箱</h1>
+      <p>我在 X 上分享过的开源工具、学习资源和书单。按场景查找，不必翻时间线。</p>
+    </header>
+
+    <input id="q" class="search" type="search" placeholder="搜名称、痛点或标签，例如：双机、字幕、书单、Agent" />
+
+    <div id="filters" class="filters"></div>
+    <div class="quick">
+      <button id="featuredBtn" type="button">精选</button>
+      <button id="weekBtn" type="button">本周新收录</button>
+    </div>
+    <div id="count" class="meta">加载中…</div>
+    <section id="grid" class="grid"></section>
+
+    <footer>
+      GitHub 星数打开页面时会尝试刷新；原推浏览量来自收录时的快照，第三方工具也可能改名、失效或收费。
+    </footer>
+  </div>
+  <script src="./assets/app.js"></script>
+</body>
+</html>
