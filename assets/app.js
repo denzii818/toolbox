@@ -9,6 +9,9 @@ const state = {
 
 const $ = (id) => document.getElementById(id);
 
+const ICON_STAR = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.7.9-4.8 4.6 1.2 6.6L12 17.8 6 20.7l1.2-6.6L2.4 9.5l6.7-.9L12 2.5z"/></svg>`;
+const ICON_EYE = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-5.2 0-9.3 3.4-10.7 8 1.4 4.6 5.5 8 10.7 8s9.3-3.4 10.7-8C21.3 8.4 17.2 5 12 5zm0 13a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2.2a2.8 2.8 0 1 0 0-5.6 2.8 2.8 0 0 0 0 5.6z"/></svg>`;
+
 function withinDays(dateStr, days) {
   const t = new Date(dateStr + "T00:00:00");
   if (Number.isNaN(t.getTime())) return false;
@@ -24,7 +27,7 @@ function formatCount(n) {
     const text = wan >= 100 ? wan.toFixed(0) : wan.toFixed(1);
     return text.replace(/\.0$/, "") + "万";
   }
-  return num.toLocaleString("zh-CN");
+  return num.toLocaleString("en-US");
 }
 
 function parseRepo(githubUrl) {
@@ -96,10 +99,10 @@ function renderFilters() {
 function statsHtml(item) {
   const parts = [];
   if (item.stars !== null && item.stars !== undefined && item.stars !== "") {
-    parts.push(`<span class="stat">GitHub ${formatCount(item.stars)} Star</span>`);
+    parts.push(`<span class="stat" title="GitHub Stars">${ICON_STAR}${formatCount(item.stars)}</span>`);
   }
   if (item.tweetViews !== null && item.tweetViews !== undefined && item.tweetViews !== "") {
-    parts.push(`<span class="stat">原推浏览 ${formatCount(item.tweetViews)}</span>`);
+    parts.push(`<span class="stat" title="原推浏览">${ICON_EYE}${formatCount(item.tweetViews)}</span>`);
   }
   return parts.length ? `<div class="stats">${parts.join("")}</div>` : "";
 }
