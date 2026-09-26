@@ -50,27 +50,60 @@ body {
   margin: 0 auto;
   padding: 16px 0 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.top-right {
+  display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.home-link,
+.theme-switch button,
+.layout-switch button,
+.filters button,
+.quick button,
+.x-link {
+  height: 36px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+}
+.home-icon {
+  font-size: 16px;
+  line-height: 1;
+  filter: grayscale(1) contrast(1.4);
 }
 
 .theme-switch, .layout-switch, .quick, .filters {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  align-items: center;
 }
 
 .theme-switch button,
 .layout-switch button,
 .filters button,
 .quick button {
-  border: 1px solid var(--line);
-  background: var(--card);
   border-radius: 999px;
-  padding: 6px 12px;
+  padding: 0 12px;
   cursor: pointer;
-  color: var(--ink);
   font-size: 13px;
 }
 
@@ -87,14 +120,11 @@ html[data-theme="auto"] button.active {
 
 .x-link {
   width: 36px;
-  height: 36px;
-  border: 1px solid var(--line);
+  padding: 0;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--card);
-  color: var(--ink);
 }
 .x-link svg { width: 14px; height: 14px; fill: currentColor; }
 
@@ -149,6 +179,7 @@ header h1 {
 }
 .grid.list {
   grid-template-columns: 1fr;
+  gap: 8px;
 }
 
 .card {
@@ -167,15 +198,29 @@ header h1 {
 
 .grid.list .card {
   display: grid;
-  grid-template-columns: minmax(160px, 220px) 1fr auto;
-  gap: 12px 20px;
-  align-items: start;
+  grid-template-columns: minmax(140px, 200px) 1fr auto;
+  gap: 4px 16px;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 12px;
+  box-shadow: none;
 }
 .grid.list .card .lead { grid-column: 1; }
-.grid.list .card .body { grid-column: 2; }
-.grid.list .card .actions { grid-column: 3; align-self: center; }
+.grid.list .card .body { grid-column: 2; min-width: 0; }
+.grid.list .card .actions { grid-column: 3; margin-top: 0; }
 .grid.list .fit,
-.grid.list .usage { display: none; }
+.grid.list .usage,
+.grid.list .tags,
+.grid.list .lead div { display: none; }
+.grid.list .card h3 { font-size: 15px; }
+.grid.list .summary {
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.grid.list .stats { margin-top: 2px; }
 
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag {
@@ -207,9 +252,17 @@ header h1 {
   color: var(--muted);
 }
 .stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   background: var(--chip);
   border-radius: 8px;
   padding: 2px 8px;
+}
+.stat svg {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
 }
 .actions { display: flex; gap: 8px; margin-top: auto; }
 .actions a {
@@ -220,6 +273,7 @@ header h1 {
   color: var(--ink);
   background: var(--bg);
 }
+.grid.list .actions a { padding: 4px 8px; font-size: 13px; }
 .actions a.primary {
   background: var(--accent);
   border-color: var(--accent);
@@ -230,12 +284,25 @@ html[data-theme="auto"] .actions a.primary {
   color: #042f2e;
 }
 
-footer { color: var(--muted); font-size: 13px; padding: 0 0 40px; text-align: center; }
+footer {
+  color: var(--muted);
+  font-size: 13px;
+  padding: 0 0 40px;
+  text-align: center;
+  line-height: 1.7;
+}
+footer .about { margin: 0 0 8px; }
+footer .about a { color: var(--accent); text-decoration: none; }
+footer .traffic { margin: 0 0 8px; color: var(--ink); }
+footer .note { margin: 0; }
+
 .error { background: #fef2f2; color: #991b1b; padding: 12px 14px; border-radius: 10px; }
 
 @media (max-width: 720px) {
   .grid.list .card {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr auto;
   }
-  .grid.list .card .actions { margin-top: 0; }
+  .grid.list .card .lead { grid-column: 1; }
+  .grid.list .card .actions { grid-column: 2; grid-row: 1 / span 2; }
+  .grid.list .card .body { grid-column: 1; }
 }
