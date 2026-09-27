@@ -108,8 +108,7 @@ function tagsHtml(item) {
 }
 
 function hideOverflowTags() {
-  if (state.layout !== "card") return;
-  document.querySelectorAll(".grid:not(.list) .card .tags").forEach((el) => {
+  document.querySelectorAll(".card .tags").forEach((el) => {
     el.style.display = "flex";
     if (el.scrollWidth > el.clientWidth + 1) el.style.display = "none";
   });
@@ -204,16 +203,13 @@ function render() {
     return;
   }
 
-  const catName = Object.fromEntries(state.categories.map((c) => [c.id, c.name]));
   pageItems.forEach((item, index) => {
     const rank = start + index + 1;
     const card = document.createElement("article");
     card.className = "card";
-    const newBadge = withinDays(item.added, 7) ? `<span class="badge">本周新</span>` : "";
-    const featuredBadge = item.featured ? `<span class="badge">精选</span>` : "";
     card.innerHTML = `
       <div class="card-top">
-        <div class="badges">${featuredBadge}${newBadge}<span class="badge">${catName[item.category] || item.category}</span></div>
+        ${tagsHtml(item)}
         ${statsHtml(item)}
       </div>
       <h3 title="${item.name}">${rankLabel(rank)}<span class="name">${item.name}</span></h3>
@@ -223,7 +219,7 @@ function render() {
       </div>
       <p class="usage">我的用法：${item.usage || "—"}</p>
       <div class="card-bottom">
-        ${tagsHtml(item)}
+        ${state.layout === "card" ? tagsHtml(item) : ""}
         <div class="actions">
           <a class="primary" href="${item.url}" target="_blank" rel="noopener">打开</a>
           ${item.tweet ? `<a href="${item.tweet}" target="_blank" rel="noopener">原推</a>` : ""}
