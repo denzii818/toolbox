@@ -223,6 +223,8 @@ header h1 {
 .card:hover {
   background: var(--card-hover);
   border-color: var(--accent);
+  overflow: visible;
+  z-index: 8;
 }
 
 .card-top {
@@ -232,7 +234,8 @@ header h1 {
   gap: 8px;
   min-height: 24px;
 }
-.badges { display: none; }
+.grid:not(.list) .card-top .tags,
+.grid:not(.list) .badges { display: none !important; }
 
 .card h3 {
   display: flex;
@@ -285,18 +288,23 @@ header h1 {
 .usage {
   display: none;
   position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: 76px;
+  left: 12px;
+  right: 12px;
+  top: 46px;
+  width: auto;
+  height: auto;
+  max-height: none;
   margin: 0;
-  padding: 8px 10px;
+  padding: 10px 12px;
   background: var(--card);
   border: 1px solid var(--accent);
-  border-radius: 10px;
-  font-size: 12px;
-  max-height: 72px;
-  overflow: hidden;
-  z-index: 2;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  z-index: 9;
 }
 .card:hover .usage { display: block; }
 
@@ -370,52 +378,60 @@ html[data-theme="auto"] .actions a.primary { color: #042f2e; }
 
 .grid.list .card {
   height: auto;
+  overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
     "title meta"
-    "body body"
-    ". actions";
+    "body actions";
   column-gap: 16px;
-  row-gap: 4px;
-  align-items: center;
+  row-gap: 6px;
+  align-items: start;
   padding: 10px 14px;
   border-radius: 12px;
   box-shadow: none;
 }
+.grid.list .card:hover { overflow: hidden; }
 .grid.list .card-top {
   grid-area: meta;
   justify-content: flex-end;
+  align-items: center;
   min-width: 0;
 }
 .grid.list .card-top .tags {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   width: auto;
-  max-width: 280px;
-  flex: 0 1 auto;
+  max-width: 360px;
+  overflow: visible;
 }
 .grid.list h3 {
   grid-area: title;
   margin: 0;
   font-size: 16px;
+  min-height: 24px;
 }
 .grid.list .list-body {
   grid-area: body;
   min-width: 0;
+  max-width: 100%;
 }
 .grid.list .card-bottom {
   grid-area: actions;
   margin-top: 0;
   padding-top: 0;
   justify-content: flex-end;
+  align-self: end;
 }
 .grid.list .card-bottom .tags { display: none; }
 .grid.list .usage { display: none !important; }
 .grid.list .summary {
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
   margin: 0;
 }
 .grid.list .fit {
-  margin: 2px 0 0;
+  margin: 4px 0 0;
   -webkit-line-clamp: 1;
 }
 
