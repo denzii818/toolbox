@@ -4,7 +4,9 @@ const state = {
   category: "all",
   view: "all",
   layout: localStorage.getItem("toolbox-layout") || "card",
-  query: ""
+  query: "",
+  page: 1,
+  pageSize: Number(localStorage.getItem("toolbox-page-size")) || 12
 };
 
 const $ = (id) => document.getElementById(id);
@@ -76,24 +78,18 @@ function visibleItems() {
   return list;
 }
 
-function renderFilters() {
-  const box = $("filters");
-  box.innerHTML = "";
-  [{ id: "all", name: "全部" }, ...state.categories].forEach((cat) => {
-    const btn = document.createElement("button");
-    btn.textContent = cat.name;
-    if (state.category === cat.id) btn.className = "active";
-    btn.onclick = () => {
-      state.category = cat.id;
-      render();
-    };
-    box.appendChild(btn);
-  });
-  $("featuredBtn").className = state.view === "featured" ? "active" : "";
-  $("weekBtn").className = state.view === "week" ? "active" : "";
-  $("heatBtn").className = state.view === "heat" ? "active" : "";
-  $("cardBtn").className = state.layout === "card" ? "active" : "";
-  $("listBtn").className = state.layout === "list" ? "active" : "";
+function changeView(next) {
+  state.view = state.view === next ? "all" : next;
+  state.page = 1;
+  render();
+}
+
+function rankLabel(rank) {
+  if (state.view !== "heat") return "";
+  if (rank === 1) return `<span class="badge rank top1">Top1</span>`;
+  if (rank === 2) return `<span class="badge rank top2">Top2</span>`;
+  if (rank === 3) return `<span class="badge rank top3">Top3</span>`;
+  return `<span class="badge rank">#${rank}</span>`;
 }
 
 function statsHtml(item) {
@@ -104,42 +100,115 @@ function statsHtml(item) {
   if (item.tweetViews !== null && item.tweetViews !== undefined && item.tweetViews !== "") {
     parts.push(`<span class="stat" title="原推浏览">${ICON_EYE}${formatCount(item.tweetViews)}</span>`);
   }
-  return parts.length ? `<div class="stats">${parts.join("")}</div>` : "";
+  return parts.length ? `<div class="stats">${parts.join("")}</div>` : `<div class="stats"></div>`;
+}
+
+function renderFilters() {
+  const box = $("filters");
+  box.innerHTML = "";
+  [{ id: "all", name: "全部" }, ...state.categories].forEach((cat) => {
+    const btn = document.createElement("button");
+    btn.textContent = cat.name;
+    if (state.category === cat.id) btn.className = "active";
+    btn.onclick = () => {
+      state.category = cat.id;
+      state.page = 1;
+      render();
+    };
+    box.appendChild(btn);
+  });
+  $("featuredBtn").className = state.view === "featured" ? "active" : "";
+  $("weekBtn").className = state.view === "week" ? "active" : "";
+  $("heatBtn").className = state.view === "heat" ? "active" : "";
+  $("cardBtn").className = state.layout === "card" ? "active" : "";
+  $("listBtn").className = state.layout === "list" ? "active" : "";
+  document.querySelectorAll(".page-size [data-size]").forEach((btn) => {
+    btn.classList.toggle("active", Number(btn.dataset.size) === state.pageSize);
+  });
+}
+
+function renderPager(total) {
+  const pages = Math.max(1, Math.ceil(total / state.pageSize));
+  if (state.page > pages) state.page = pages;
+  const box = $("pager");
+  box.innerHTML = "";
+
+  const addBtn = (label, page, disabled, active) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = label;
+    if (active) btn.className = "active";
+    btn.disabled = disabled;
+    btn.onclick = () => {
+      if (disabled) return;
+      state.page = page;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    box.appendChild(btn);
+  };
+
+  addBtn("上一页", state.page - 1, state.page <= 1, false);
+
+  const windowSize = 5;
+  let start = Math.max(1, state.page - 2);
+  let end = Math.min(pages, start + windowSize - 1);
+  start = Math.max(1, end - windowSize + 1);
+  if (start > 1) addBtn("1", 1, false, state.page === 1);
+  if (start > 2) {
+    const dots = document.createElement("span");
+    dots.textContent = "…";
+    box.appendChild(dots);
+  }
+  for (let i = start; i <= end; i += 1) addBtn(String(i), i, false, i === state.page);
+  if (end < pages - 1) {
+    const dots = document.createElement("span");
+    dots.textContent = "…";
+    box.appendChild(dots);
+  }
+  if (end < pages) addBtn(String(pages), pages, false, state.page === pages);
+
+  addBtn("下一页", state.page + 1, state.page >= pages, false);
 }
 
 function render() {
   renderFilters();
   const list = visibleItems();
+  const pages = Math.max(1, Math.ceil(list.length / state.pageSize));
+  if (state.page > pages) state.page = pages;
+  const start = (state.page - 1) * state.pageSize;
+  const pageItems = list.slice(start, start + state.pageSize);
+
   const label = state.view === "heat" ? "按原推浏览量排序" : "共";
-  $("count").textContent = `${label} ${list.length} 条`;
+  $("count").textContent = `${label} ${list.length} 条 · 第 ${state.page}/${pages} 页`;
+  renderPager(list.length);
+
   const grid = $("grid");
   grid.className = state.layout === "list" ? "grid list" : "grid";
   grid.innerHTML = "";
 
-  if (!list.length) {
+  if (!pageItems.length) {
     grid.innerHTML = "<p class='meta'>没有匹配结果。换个词，或点「全部」。</p>";
     return;
   }
 
   const catName = Object.fromEntries(state.categories.map((c) => [c.id, c.name]));
-  list.forEach((item, index) => {
+  pageItems.forEach((item, index) => {
+    const rank = start + index + 1;
     const card = document.createElement("article");
     card.className = "card";
     const newBadge = withinDays(item.added, 7) ? `<span class="badge">本周新</span>` : "";
     const featuredBadge = item.featured ? `<span class="badge">精选</span>` : "";
-    const rank = state.view === "heat" ? `<span class="rank">#${index + 1}</span>` : "";
     card.innerHTML = `
-      <div class="lead">
-        <div>${rank}${featuredBadge}${newBadge}<span class="badge">${catName[item.category] || item.category}</span></div>
-        <h3>${item.name}</h3>
+      <div class="card-top">
+        <div class="badges">${rankLabel(rank)}${featuredBadge}${newBadge}<span class="badge">${catName[item.category] || item.category}</span></div>
+        ${statsHtml(item)}
       </div>
-      <div class="body">
-        <p class="summary">${item.summary}</p>
-        <p class="fit">适合：${item.suitable || "—"}</p>
-        <p class="usage">我的用法：${item.usage || "—"}</p>
-        <div class="tags">${(item.tags || []).map((t) => `<span class="tag">${t}</span>`).join("")}</div>
-      </div>
-      ${statsHtml(item)}
+      <h3 title="${item.name}">${item.name}</h3>
+      <p class="summary" title="${item.summary}">${item.summary}</p>
+      <p class="fit" title="${item.suitable || ""}">适合：${item.suitable || "—"}</p>
+      <div class="tags">${(item.tags || []).map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+      <p class="usage">我的用法：${item.usage || "—"}</p>
       <div class="actions">
         <a class="primary" href="${item.url}" target="_blank" rel="noopener">打开</a>
         ${item.tweet ? `<a href="${item.tweet}" target="_blank" rel="noopener">原推</a>` : ""}
@@ -167,6 +236,7 @@ async function refreshStars() {
 
 async function boot() {
   applyTheme();
+  if (![12, 50, 100].includes(state.pageSize)) state.pageSize = 12;
   try {
     const [catsRes, itemsRes] = await Promise.all([
       fetch("./data/categories.json"),
@@ -188,23 +258,13 @@ document.querySelectorAll("[data-theme-set]").forEach((btn) => {
 
 $("q").addEventListener("input", (e) => {
   state.query = e.target.value;
+  state.page = 1;
   render();
 });
 
-$("featuredBtn").addEventListener("click", () => {
-  state.view = state.view === "featured" ? "all" : "featured";
-  render();
-});
-
-$("weekBtn").addEventListener("click", () => {
-  state.view = state.view === "week" ? "all" : "week";
-  render();
-});
-
-$("heatBtn").addEventListener("click", () => {
-  state.view = state.view === "heat" ? "all" : "heat";
-  render();
-});
+$("featuredBtn").addEventListener("click", () => changeView("featured"));
+$("weekBtn").addEventListener("click", () => changeView("week"));
+$("heatBtn").addEventListener("click", () => changeView("heat"));
 
 $("cardBtn").addEventListener("click", () => {
   state.layout = "card";
@@ -216,6 +276,15 @@ $("listBtn").addEventListener("click", () => {
   state.layout = "list";
   localStorage.setItem("toolbox-layout", "list");
   render();
+});
+
+document.querySelectorAll(".page-size [data-size]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    state.pageSize = Number(btn.dataset.size);
+    state.page = 1;
+    localStorage.setItem("toolbox-page-size", String(state.pageSize));
+    render();
+  });
 });
 
 boot();
