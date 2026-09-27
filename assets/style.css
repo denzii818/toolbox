@@ -228,34 +228,18 @@ header h1 {
 .card-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 8px;
   min-height: 24px;
 }
-.badges {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 6px;
-  min-width: 0;
-  flex: 1;
-  overflow: hidden;
-}
-.badge {
-  flex: 0 0 auto;
-  background: var(--accent-soft);
-  color: var(--accent);
-  border-radius: 999px;
-  padding: 1px 8px;
-  font-size: 12px;
-  white-space: nowrap;
-}
+.badges { display: none; }
 
 .card h3 {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 8px 0 6px;
-  font-size: 17px;
+  margin: 0 0 8px;
+  font-size: 18px;
   line-height: 1.3;
   min-width: 0;
 }
@@ -320,8 +304,9 @@ header h1 {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 8px;
+  gap: 10px;
   margin-top: auto;
+  padding-top: 14px;
 }
 .tags {
   display: flex;
@@ -388,27 +373,42 @@ html[data-theme="auto"] .actions a.primary { color: #042f2e; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
-    "top actions"
-    "title actions"
-    "body actions"
-    "stats actions";
+    "title meta"
+    "body body"
+    ". actions";
   column-gap: 16px;
-  row-gap: 2px;
+  row-gap: 4px;
   align-items: center;
   padding: 10px 14px;
   border-radius: 12px;
   box-shadow: none;
 }
-.grid.list .card-top { grid-area: top; }
-.grid.list h3 { grid-area: title; margin: 0; font-size: 16px; }
-.grid.list .list-body { grid-area: body; min-width: 0; }
-.grid.list .stats { grid-area: stats; justify-content: flex-start; }
+.grid.list .card-top {
+  grid-area: meta;
+  justify-content: flex-end;
+  min-width: 0;
+}
+.grid.list .card-top .tags {
+  width: auto;
+  max-width: 280px;
+  flex: 0 1 auto;
+}
+.grid.list h3 {
+  grid-area: title;
+  margin: 0;
+  font-size: 16px;
+}
+.grid.list .list-body {
+  grid-area: body;
+  min-width: 0;
+}
 .grid.list .card-bottom {
   grid-area: actions;
   margin-top: 0;
-  justify-content: center;
+  padding-top: 0;
+  justify-content: flex-end;
 }
-.grid.list .tags,
+.grid.list .card-bottom .tags { display: none; }
 .grid.list .usage { display: none !important; }
 .grid.list .summary {
   -webkit-line-clamp: 1;
@@ -452,5 +452,12 @@ footer .note { margin: 0; }
   .pager-bar {
     grid-template-columns: 1fr;
     justify-items: center;
+  }
+  .grid.list .card {
+    grid-template-areas:
+      "title title"
+      "meta meta"
+      "body body"
+      "actions actions";
   }
 }
