@@ -107,6 +107,14 @@ function tagsHtml(item) {
   return `<div class="tags">${(item.tags || []).map((t) => `<span class="tag">${t}</span>`).join("")}</div>`;
 }
 
+function hideOverflowTags() {
+  if (state.layout !== "card") return;
+  document.querySelectorAll(".grid:not(.list) .card .tags").forEach((el) => {
+    el.style.display = "flex";
+    if (el.scrollWidth > el.clientWidth + 1) el.style.display = "none";
+  });
+}
+
 function renderFilters() {
   const box = $("filters");
   box.innerHTML = "";
@@ -206,7 +214,6 @@ function render() {
     card.innerHTML = `
       <div class="card-top">
         <div class="badges">${featuredBadge}${newBadge}<span class="badge">${catName[item.category] || item.category}</span></div>
-        ${state.layout === "list" ? tagsHtml(item) : ""}
         ${statsHtml(item)}
       </div>
       <h3 title="${item.name}">${rankLabel(rank)}<span class="name">${item.name}</span></h3>
@@ -216,7 +223,7 @@ function render() {
       </div>
       <p class="usage">我的用法：${item.usage || "—"}</p>
       <div class="card-bottom">
-        ${state.layout === "card" ? tagsHtml(item) : ""}
+        ${tagsHtml(item)}
         <div class="actions">
           <a class="primary" href="${item.url}" target="_blank" rel="noopener">打开</a>
           ${item.tweet ? `<a href="${item.tweet}" target="_blank" rel="noopener">原推</a>` : ""}
@@ -225,6 +232,8 @@ function render() {
     `;
     grid.appendChild(card);
   });
+
+  requestAnimationFrame(hideOverflowTags);
 }
 
 async function refreshStars() {
@@ -295,5 +304,7 @@ document.querySelectorAll(".page-size [data-size]").forEach((btn) => {
     render();
   });
 });
+
+window.addEventListener("resize", hideOverflowTags);
 
 boot();
