@@ -86,10 +86,10 @@ function changeView(next) {
 
 function rankLabel(rank) {
   if (state.view !== "heat") return "";
-  if (rank === 1) return `<span class="badge rank top1">Top1</span>`;
-  if (rank === 2) return `<span class="badge rank top2">Top2</span>`;
-  if (rank === 3) return `<span class="badge rank top3">Top3</span>`;
-  return `<span class="badge rank">#${rank}</span>`;
+  if (rank === 1) return `<span class="rank-inline top1">Top1</span>`;
+  if (rank === 2) return `<span class="rank-inline top2">Top2</span>`;
+  if (rank === 3) return `<span class="rank-inline top3">Top3</span>`;
+  return `<span class="rank-inline">#${rank}</span>`;
 }
 
 function statsHtml(item) {
@@ -101,6 +101,10 @@ function statsHtml(item) {
     parts.push(`<span class="stat" title="原推浏览">${ICON_EYE}${formatCount(item.tweetViews)}</span>`);
   }
   return parts.length ? `<div class="stats">${parts.join("")}</div>` : `<div class="stats"></div>`;
+}
+
+function tagsHtml(item) {
+  return `<div class="tags">${(item.tags || []).map((t) => `<span class="tag">${t}</span>`).join("")}</div>`;
 }
 
 function renderFilters() {
@@ -178,8 +182,8 @@ function render() {
   if (state.page > pages) state.page = pages;
   const start = (state.page - 1) * state.pageSize;
   const pageItems = list.slice(start, start + state.pageSize);
+  const label = state.view === "heat" ? "按浏览量" : "共";
 
-  const label = state.view === "heat" ? "按原推浏览量排序" : "共";
   $("count").textContent = `${label} ${list.length} 条 · 第 ${state.page}/${pages} 页`;
   renderPager(list.length);
 
@@ -188,7 +192,7 @@ function render() {
   grid.innerHTML = "";
 
   if (!pageItems.length) {
-    grid.innerHTML = "<p class='meta'>没有匹配结果。换个词，或点「全部」。</p>";
+    grid.innerHTML = "<p class='count'>没有匹配结果。换个词，或点「全部」。</p>";
     return;
   }
 
@@ -201,17 +205,22 @@ function render() {
     const featuredBadge = item.featured ? `<span class="badge">精选</span>` : "";
     card.innerHTML = `
       <div class="card-top">
-        <div class="badges">${rankLabel(rank)}${featuredBadge}${newBadge}<span class="badge">${catName[item.category] || item.category}</span></div>
+        <div class="badges">${featuredBadge}${newBadge}<span class="badge">${catName[item.category] || item.category}</span></div>
+        ${state.layout === "list" ? tagsHtml(item) : ""}
         ${statsHtml(item)}
       </div>
-      <h3 title="${item.name}">${item.name}</h3>
-      <p class="summary" title="${item.summary}">${item.summary}</p>
-      <p class="fit" title="${item.suitable || ""}">适合：${item.suitable || "—"}</p>
-      <div class="tags">${(item.tags || []).map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+      <h3 title="${item.name}">${rankLabel(rank)}<span class="name">${item.name}</span></h3>
+      <div class="list-body">
+        <p class="summary" title="${item.summary}">${item.summary}</p>
+        <p class="fit" title="${item.suitable || ""}">适合：${item.suitable || "—"}</p>
+      </div>
       <p class="usage">我的用法：${item.usage || "—"}</p>
-      <div class="actions">
-        <a class="primary" href="${item.url}" target="_blank" rel="noopener">打开</a>
-        ${item.tweet ? `<a href="${item.tweet}" target="_blank" rel="noopener">原推</a>` : ""}
+      <div class="card-bottom">
+        ${state.layout === "card" ? tagsHtml(item) : ""}
+        <div class="actions">
+          <a class="primary" href="${item.url}" target="_blank" rel="noopener">打开</a>
+          ${item.tweet ? `<a href="${item.tweet}" target="_blank" rel="noopener">原推</a>` : ""}
+        </div>
       </div>
     `;
     grid.appendChild(card);
