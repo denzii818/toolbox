@@ -108,7 +108,8 @@ function tagsHtml(item) {
 }
 
 function hideOverflowTags() {
-  document.querySelectorAll(".card .tags").forEach((el) => {
+  if (state.layout !== "card") return;
+  document.querySelectorAll(".grid:not(.list) .card-bottom .tags").forEach((el) => {
     el.style.display = "flex";
     if (el.scrollWidth > el.clientWidth + 1) el.style.display = "none";
   });
@@ -207,9 +208,11 @@ function render() {
     const rank = start + index + 1;
     const card = document.createElement("article");
     card.className = "card";
+    const topTags = state.layout === "list" ? tagsHtml(item) : "";
+    const bottomTags = state.layout === "card" ? tagsHtml(item) : "";
     card.innerHTML = `
       <div class="card-top">
-        ${tagsHtml(item)}
+        ${topTags}
         ${statsHtml(item)}
       </div>
       <h3 title="${item.name}">${rankLabel(rank)}<span class="name">${item.name}</span></h3>
@@ -219,7 +222,7 @@ function render() {
       </div>
       <p class="usage">我的用法：${item.usage || "—"}</p>
       <div class="card-bottom">
-        ${state.layout === "card" ? tagsHtml(item) : ""}
+        ${bottomTags}
         <div class="actions">
           <a class="primary" href="${item.url}" target="_blank" rel="noopener">打开</a>
           ${item.tweet ? `<a href="${item.tweet}" target="_blank" rel="noopener">原推</a>` : ""}
