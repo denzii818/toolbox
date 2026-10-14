@@ -44,6 +44,21 @@ function viewCount(item) {
   return Number.isFinite(n) ? n : -1;
 }
 
+function getTweetDate(item) {
+  if (item.tweet) {
+    const match = String(item.tweet).match(/status\/(\d+)/);
+    if (match) {
+      try {
+        const id = BigInt(match[1]);
+        const ts = Number((id >> 22n) + 1288834974657n);
+        const d = new Date(ts);
+        if (!Number.isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+      } catch (e) {}
+    }
+  }
+  return item.added || "";
+}
+
 function applyTheme(theme) {
   const next = theme || localStorage.getItem("toolbox-theme") || "auto";
   document.documentElement.setAttribute("data-theme", next);
@@ -210,6 +225,7 @@ function render() {
     card.className = "card";
     const topTags = state.layout === "list" ? tagsHtml(item) : "";
     const bottomTags = state.layout === "card" ? tagsHtml(item) : "";
+    const tweetDate = getTweetDate(item);
     card.innerHTML = `
       <div class="card-top">
         ${topTags}
@@ -221,6 +237,7 @@ function render() {
         <p class="fit" title="${item.suitable || ""}">适合：${item.suitable || "—"}</p>
       </div>
       <p class="usage">我的用法：${item.usage || "—"}</p>
+      ${tweetDate ? `<span class="time">${tweetDate}</span>` : ""}
       <div class="card-bottom">
         ${bottomTags}
         <div class="actions">
