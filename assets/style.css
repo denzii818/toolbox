@@ -9,6 +9,8 @@
   --accent-soft: #d7f3ee;
   --chip: #efe8dc;
   --shadow: 0 8px 24px rgba(28, 25, 23, 0.05);
+  --usage-bg: #f0fdf9;
+  --usage-border: #0f766e;
 }
 
 html[data-theme="dark"] {
@@ -22,6 +24,8 @@ html[data-theme="dark"] {
   --accent-soft: #134e4a;
   --chip: #26231e;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --usage-bg: #134e4a;
+  --usage-border: #5eead4;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,6 +40,8 @@ html[data-theme="dark"] {
     --accent-soft: #134e4a;
     --chip: #26231e;
     --shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    --usage-bg: #134e4a;
+    --usage-border: #5eead4;
   }
 }
 
@@ -290,16 +296,16 @@ header h1 {
   position: absolute;
   left: 12px;
   right: 12px;
-  top: 150px;
+  top: 118px;
   width: auto;
   height: auto;
   max-height: none;
   margin: 0;
   padding: 10px 12px;
-  background: var(--card);
-  border: 1px solid var(--accent);
+  background: var(--usage-bg);
+  border: 1.5px solid var(--usage-border);
   border-radius: 12px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 6px 20px rgba(15, 118, 110, 0.18);
   font-size: 13px;
   line-height: 1.55;
   white-space: pre-wrap;
@@ -441,7 +447,10 @@ html[data-theme="auto"] .actions a.primary { color: #042f2e; }
   left: 14px;
   right: 14px;
   bottom: auto;
-  margin-top: 6px;
+  margin-top: 8px;
+  background: var(--usage-bg);
+  border: 1.5px solid var(--usage-border);
+  box-shadow: 0 6px 20px rgba(15, 118, 110, 0.22);
 }
 .grid.list .card:hover .usage { display: block; }
 .grid.list .summary {
