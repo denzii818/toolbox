@@ -1,6 +1,25 @@
 [
 
   {
+    "id": "iphone-use",
+    "name": "iPhone Use（Codex控机）",
+    "summary": "开源 Codex 插件，通过 USB 让 Codex 直接操作真实 iPhone：开 App、读屏幕、点击滑动输入，实时预览，无需越狱。",
+    "suitable": "想让 AI 自动化操作手机 App（微信、淘宝等）的开发者。",
+    "notSuitable": "不想开开发者模式或不愿插 USB 的人。",
+    "usage": "Mac + Xcode + Apple 开发者账号，安装插件后按提示配置即可。",
+    "url": "https://github.com/zhongerxin/iPhone-use",
+    "github": "https://github.com/zhongerxin/iPhone-use",
+    "stars": 3600,
+    "tweet": "https://x.com/denziideng/status/2108922161339744332",
+    "tweetViews": 2811,
+    "category": "ai-dev",
+    "tags": ["开源", "iOS", "Codex", "自动化"],
+    "platforms": ["macOS", "iOS"],
+    "difficulty": "中等",
+    "featured": false,
+    "added": "2026-10-10"
+  },
+  {
     "id": "35-tools",
     "name": "35 个神仙工具",
     "summary": "一次性整理 35 个被低估的免费实用工具，覆盖绕付费墙、永久存网页、全球电台、一次性邮箱、自动化、图片处理、PDF、白板、音视频、素材与开发者工具。",
