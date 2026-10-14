@@ -233,8 +233,8 @@ function render() {
       </div>
       <h3 title="${item.name}">${rankLabel(rank)}<span class="name">${item.name}</span></h3>
       <div class="list-body">
-        <p class="summary" title="${item.summary}">${item.summary}</p>
-        <p class="fit" title="${item.suitable || ""}">适合：${item.suitable || "—"}</p>
+        <p class="summary">${item.summary}</p>
+        <p class="fit">适合：${item.suitable || "—"}</p>
       </div>
       <p class="usage">我的用法：${item.usage || "—"}</p>
       ${tweetDate ? `<span class="time">${tweetDate}</span>` : ""}
