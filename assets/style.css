@@ -290,7 +290,7 @@ header h1 {
   position: absolute;
   left: 12px;
   right: 12px;
-  top: 46px;
+  top: 150px;
   width: auto;
   height: auto;
   max-height: none;
@@ -307,6 +307,15 @@ header h1 {
   z-index: 9;
 }
 .card:hover .usage { display: block; }
+
+.time {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  font-size: 11px;
+  color: var(--muted);
+  pointer-events: none;
+}
 
 .card-bottom {
   display: flex;
@@ -391,7 +400,7 @@ html[data-theme="auto"] .actions a.primary { color: #042f2e; }
   border-radius: 12px;
   box-shadow: none;
 }
-.grid.list .card:hover { overflow: hidden; }
+.grid.list .card:hover { overflow: visible; z-index: 8; }
 .grid.list .card-top {
   grid-area: meta;
   justify-content: flex-end;
@@ -425,7 +434,16 @@ html[data-theme="auto"] .actions a.primary { color: #042f2e; }
   align-self: end;
 }
 .grid.list .card-bottom .tags { display: none; }
-.grid.list .usage { display: none !important; }
+.grid.list .time { display: none; }
+.grid.list .usage {
+  display: none;
+  top: 100%;
+  left: 14px;
+  right: 14px;
+  bottom: auto;
+  margin-top: 6px;
+}
+.grid.list .card:hover .usage { display: block; }
 .grid.list .summary {
   -webkit-line-clamp: 2;
   margin: 0;
